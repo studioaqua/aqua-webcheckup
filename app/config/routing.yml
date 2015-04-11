@@ -1,0 +1,4 @@
+aqua_web_checkup:
+    resource: "@AquaWebCheckupBundle/Resources/config/routing.yml"
+    prefix:   /
+
