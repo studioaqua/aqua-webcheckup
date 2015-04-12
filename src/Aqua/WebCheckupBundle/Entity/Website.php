@@ -2,20 +2,20 @@
 /**
  *
  */
-namespace AppBundle\Entity;
+namespace Aqua\WebCheckupBundle\Entity;
 
 class Website
 {
-    protected $url;
+    protected $website;
 
-    public function getUrl()
+    public function getWebsite()
     {
-        return $this->url;
+        return $this->website;
     }
 
-    public function setUrl($url)
+    public function setWebsite($website)
     {
-        $this->url = $url;
+        $this->website = $website;
     }
 
 }

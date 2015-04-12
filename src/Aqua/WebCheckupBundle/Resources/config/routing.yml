@@ -1,3 +1,7 @@
 aqua_web_checkup_homepage:
     path:     /
     defaults: { _controller: AquaWebCheckupBundle:Default:index }
+
+aqua_web_checkup_success:
+    path:     /
+    defaults: { _controller: AquaWebCheckupBundle:Default:success }
