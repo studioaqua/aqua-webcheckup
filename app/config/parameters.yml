@@ -1,1 +1,14 @@
-{ parameters: { database_driver: pdo_mysql, database_host: 127.0.0.1, database_port: null, database_name: aqua_webcheckup, database_user: studioaqua, database_password: SAp4ssw0rd, mailer_transport: smtp, mailer_host: 127.0.0.1, mailer_user: null, mailer_password: null, locale: en, secret: acc3a48338ad78edf47fdd8e19c371810, database_path: null } }
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: aqua_webcheckup
+    database_user: studioaqua
+    database_password: SAp4ssw0rd
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: acc3a48338ad78edf47fdd8e19c371810

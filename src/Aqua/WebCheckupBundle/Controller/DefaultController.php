@@ -3,32 +3,55 @@
 namespace Aqua\WebCheckupBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Aqua\WebCheckupBundle\Entity\Website;
 use Symfony\Component\HttpFoundation\Request;
+use Aqua\WebCheckupBundle\Entity\Website;
+use Aqua\WebCheckupBundle\Model\WebRank;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class DefaultController extends Controller
 {
-    public function indexAction(Request $request)
+  protected $logger;
+
+  public function indexAction(Request $request)
+  {
+    // create a task and give it some dummy data for this example
+    $website = new Website();
+    $website->setWebsite('http://www.yourdomain.name');
+
+    $form = $this->createFormBuilder($website)
+        ->add('website', 'text')
+        ->add('checkup', 'submit', array('label' => 'Check Up'))
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if ($form->isValid())
     {
-        // create a task and give it some dummy data for this example
-        $website = new Website();
-        $website->setWebsite('www.yourdomain.name');
+      // Set the typed url.
+      $website->setWebsite($form->get('website')->getData());
 
-        $form = $this->createFormBuilder($website)
-            ->add('website', 'text')
-            ->add('checkup', 'submit', array('label' => 'Check Up'))
-            ->getForm();
+      // Get buzz browser.
+      $buzz = $this->container->get('buzz');
+      //$response = $buzz->get($website);
+      //echo $response->getContent();
 
-        $form->handleRequest($request);
+      // Get Logger.
+      $logger = $this->get('logger');
 
-        if ($form->isValid()) {
-            // perform some action, such as saving the task to the database
+      // Calculate the rank for this URL.
+      // The URL is the elemet with index = 1
+      $webrank = new WebRank($website, $buzz, $logger);
 
-            return $this->redirectToRoute('aqua_web_checkup_success');
-        }
-
-        return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
-            'form' => $form->createView(),
-        ));
+      //return $this->redirectToRoute('aqua_web_checkup_success');
     }
+
+    return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
+        'form' => $form->createView(),
+    ));
+  }
+
+  public function resultsAction()
+  {
+    return $this->render('AquaWebCheckupBundle:Default:results.html.twig');
+  }
 }
