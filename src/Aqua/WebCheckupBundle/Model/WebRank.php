@@ -2,25 +2,24 @@
 
 namespace Aqua\WebCheckupBundle\Model;
 
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Aqua\WebCheckupBundle\Entity\Website;
-use Monolog\Processor\PsrLogMessageProcessor;
+use Buzz\Browser;
+//use Monolog\Processor\PsrLogMessageProcessor;
 
 class WebRank
 {
   // Logger
-  protected $logger;
+  private $logger;
 
-  // Buzz Browser
-  protected $browser;
-
-  // Website
-  // Output values, rank = 0 means no checkup has been performed.
-  protected $website;
+  // Browser
+  private $browser;
 
   // Lock filename
-  public $lock_filename = '';
-  public $lock_filename_respo = '';
+  private $lock_filename = '';
+  private $lock_filename_respo = '';
+
   // Regular expression
   private $rexp_title = '/<title>(.*?)<\/title>/';
   private $rexp_flash_calls = "/(\.swf|swfobject.js|swfobject.)/";
@@ -35,50 +34,19 @@ class WebRank
     'fonts.googleapis',
   );
 
-  public function __construct(Website $website, $buzz, LoggerInterface $logger)
+  public function __construct(LoggerInterface $logger, Browser $browser)
   {
     // Init Logger
     $this->logger = $logger;
 
-    // Init Browser
-    $this->browser = $buzz;
-
-    // Init Website
-    $this->website = $website;
-
-    // Init page url
-    //$this->checkout['name'] = $website_name;
-    //$this->checkout['url'] = $url;
-
-    $this->logger->info('######## WEB CHECKUP');
+    // Init browser
+    $this->browser = $browser;
 
     // Init lock filename
-    //$this->lock_filename = dirname(__FILE__) . '/.lock';
-    //$this->lock_filename_respo = dirname(__FILE__) . '/.lock.respo';
+    $this->lock_filename = dirname(__FILE__) . '/.lock';
+    $this->lock_filename_respo = dirname(__FILE__) . '/.lock.respo';
 
-    $this->logger->debug('Init url {url} and lock file {file}', array(
-      'url' => $this->website->getWebsite(),
-      'file' => $this->lock_filename));
-  }
-
-  /**
-   * Returns the html page content
-   */
-  protected function get_page($url = '')
-  {
-    if (empty($url))
-    {
-      $url = $this->checkout['url'];
-    }
-
-    $snoopy = new Snoopy;
-    $snoopy->agent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)";
-    $snoopy->_httpmethod = "GET"; // Metodo POST
-    $snoopy->referer = "";
-    $snoopy->fetch($url);
-    $pagedata = $snoopy->results;
-
-    return $pagedata;
+    $this->logger->debug('Init WebRank');
   }
 
   /**
@@ -102,14 +70,15 @@ class WebRank
      */
 
     preg_match_all($this->rexp_flash_calls, $html_source, $match);
-    $this->logger->debug('[has_flash] Rexp match -> ' . var_export($match[1], TRUE));
 
     if (empty($match[1]))
     {
+      $this->logger->debug('[has_flash] NO');
       return FALSE;
     }
     else
     {
+      $this->logger->debug('[has_flash] YES');
       return TRUE;
     }
   }
@@ -124,33 +93,36 @@ class WebRank
    */
   private function is_responsive($html_source)
   {
+    // Init output variable
+    $output = FALSE;
+
     // Create the lock file
     $fh = fopen($this->lock_filename_respo, 'w');
 
-    $is_responsive_flag = FALSE;
-
-    // Create a DOM object from a string
-    $html = str_get_html($html_source);
-
-    if (empty($html))
+    if (empty($html_source))
     {
       $this->logger->warn('[is_responsive] The HTML is empty');
     }
     else
     {
-      // Find all link tags
-      foreach($html->find('link') as $element)
-      {
-        if ($element->type == 'text/css')
+      $crawler = new Crawler();
+      $crawler->addContent($html_source);
+
+      $is_responsive_flag = $crawler->filter('link')->each(
+        function (Crawler $node, $i)
         {
-          if (!$this->strposa($element->href, $this->exclude_css_libraries))
+          $href = $node->attr('href');
+
+          if (($node->attr('type') == 'text/css')
+            && (!$this->strposa($href, $this->exclude_css_libraries)))
           {
-            $css = $this->get_page($this->checkout['url'] . '/' . $element->href);
+            $response = $this->browser->get($href);
+            $css_source = $response->getContent();
 
-            preg_match_all($this->rexp_css_media, $css, $match);
-            $this->logger->debug('[is_responsive] Rexp match -> ' . var_export($match, TRUE));
+            preg_match_all($this->rexp_css_media, $css_source, $match);
 
-            $this->logger->info('[is_responsive] CSS file ' . $element->href . ' processed.');
+            $this->logger->info('[is_responsive] CSS file {href} processed.',
+              array('href' => $href));
 
             if (!empty($match[0]))
             {
@@ -165,31 +137,36 @@ class WebRank
               {
                 // Remove trailer } and all beginning/trailing white spaces.
                 $css_rules = trim(rtrim($match[2][$key], "}"));
-                $this->logger->debug('[is_responsive] css_rules -> ' . var_export($css_rules, TRUE));
+
                 if ((intval($value) < 768)
                   && (!empty($css_rules)))
                 {
-                  $this->logger->info('[is_responsive]  ' . $match[0][$key]);
-                  $is_responsive_flag = TRUE;
-                  // Exit the both foreach
-                  break 2;
+                  $this->logger->info('[is_responsive] YES');
+                  return TRUE;
                 }
               }
             }
           }
           else
           {
-            $this->logger->info('[is_responsive] CSS file ' . $element->href . ' excluded.');
+            $this->logger->debug('[is_responsive] CSS file {href} excluded.',
+              array('href' => $href));
           }
         }
+      );
+
+      if (in_array(TRUE, $is_responsive_flag))
+      {
+        $output = TRUE;
       }
     }
+
 
     // Delete lock file
     fclose($fh);
     unlink($this->lock_filename_respo);
 
-    return $is_responsive_flag;
+    return $output;
   }
 
 
@@ -198,26 +175,22 @@ class WebRank
    * completata la scansione della pagina per il ranking nessunaltro può
    * accedere a questa porzione di codice. Per fare questo viene utilizzato
    * un file di lock.
-   *
-   * @return array
    */
-  public function get_rank()
+  public function runCheckup(Website &$website)
   {
     // Create the lock file
     $fh = fopen($this->lock_filename, 'w');
 
-    $html = $this->get_page();
-
     // Is a flash website?
-
-    if ($this->has_flash($html))
+    $website->setFlash(
+      $this->has_flash($website->getHtmlSource()));
+    if ($website->isFlash())
     {
-      $this->checkout['rank'] -= 5;
-      $this->checkout['flash'] = 'YES';
+      $website->setRank(-5);
     }
     else
     {
-      $this->checkout['rank'] += 1;
+      $website->setRank(1);
     }
 
     // Wait until lock file exists
@@ -229,23 +202,21 @@ class WebRank
     }
 
     // Is a responsive website?
-    if ($this->is_responsive($html))
+    $website->setResponsive(
+      $this->is_responsive($website->getHtmlSource()));
+    if ($website->isResponsive())
     {
-      $this->checkout['rank'] += 2;
-      $this->checkout['responsive'] = 'YES';
+      $website->setRank(2);
     }
     else
     {
-      $this->checkout['rank'] -= 3;
+      $website->setRank(-3);
     }
-
-
 
     // Delete lock file
     fclose($fh);
     unlink($this->lock_filename);
 
-    return $this->checkout;
   }
 
 
@@ -264,7 +235,11 @@ class WebRank
 
     foreach($needle as $query)
     {
-      if(strpos($haystack, $query, $offset) !== false) return true; // stop on first true result
+      if(strpos($haystack, $query, $offset) !== false)
+      {
+        // stop on first true result
+        return true;
+      }
     }
     return false;
   }

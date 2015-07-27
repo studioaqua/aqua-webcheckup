@@ -4,9 +4,9 @@ namespace Aqua\WebCheckupBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Aqua\WebCheckupBundle\Entity\Website;
-use Aqua\WebCheckupBundle\Model\WebRank;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Aqua\WebCheckupBundle\Entity\Website;
+//use Aqua\WebCheckupBundle\Model\WebRank;
 
 class DefaultController extends Controller
 {
@@ -14,6 +14,9 @@ class DefaultController extends Controller
 
   public function indexAction(Request $request)
   {
+    // Get Logger.
+    $logger = $this->get('logger');
+
     // create a task and give it some dummy data for this example
     $website = new Website();
     $website->setWebsite('http://www.yourdomain.name');
@@ -32,17 +35,26 @@ class DefaultController extends Controller
 
       // Get buzz browser.
       $buzz = $this->container->get('buzz');
-      //$response = $buzz->get($website);
-      //echo $response->getContent();
-
-      // Get Logger.
-      $logger = $this->get('logger');
+      $response = $buzz->get($website->getWebsite());
+      $website->sethHtmlSource($response->getContent());
 
       // Calculate the rank for this URL.
       // The URL is the elemet with index = 1
-      $webrank = new WebRank($website, $buzz, $logger);
+      $webrank = $this->get('web_rank');
 
-      //return $this->redirectToRoute('aqua_web_checkup_success');
+      $webrank->runCheckup($website);
+      /*
+      $logger->info('Result {website}', array(
+          'website' => var_export($website, TRUE)
+        )
+      );
+      */
+      return $this->render(
+        'AquaWebCheckupBundle:Default:results.html.twig',
+        array(
+          'website' => $website,
+        )
+      );
     }
 
     return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(

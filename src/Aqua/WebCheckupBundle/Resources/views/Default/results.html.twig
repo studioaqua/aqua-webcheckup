@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  Here you can see the checkup results.
+  <h1>{{ website.getName() }}</h1>
+  <h2>{{ website.getWebsite() }}</h2>
+  <ul>
+    <li>Has flash: {{ website.isFlashLiteral() }}</li>
+    <li>Is Responsive: {{ website.isResponsiveLiteral() }}</li>
+    <li>Rank: {{ website.getRank() }}</li>
+  </ul>
+  <a href="{{ path('aqua_web_checkup_homepage') }}">
+    Esegui un altro check
+  </a>
 {% endblock %}

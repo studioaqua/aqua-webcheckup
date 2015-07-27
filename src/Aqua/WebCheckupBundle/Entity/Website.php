@@ -14,11 +14,11 @@ class Website
    */
   protected $website;
 
-  protected $name;
-  protected $flash = FALSE;
-  protected $responsive = FALSE;
-  protected $rank = 0;
-  protected $htmlSource;
+  private $name;
+  private $flash = FALSE;
+  private $responsive = FALSE;
+  private $rank = 0;
+  private $htmlSource;
 
 
   public function getWebsite()
@@ -45,6 +45,10 @@ class Website
   {
       return $this->flash;
   }
+  public function isFlashLiteral()
+  {
+      return ($this->flash) ? 'Yes' : 'No';
+  }
 
   public function setFlash($flash)
   {
@@ -54,6 +58,10 @@ class Website
   public function isResponsive()
   {
       return $this->responsive;
+  }
+  public function isResponsiveLiteral()
+  {
+      return ($this->responsive) ? 'Yes' : 'No';
   }
 
   public function setResponsive($responsive)
@@ -68,7 +76,7 @@ class Website
 
   public function setRank($rank)
   {
-      $this->rank = $rank;
+      $this->rank += $rank;
   }
 
   public function getHtmlSource()

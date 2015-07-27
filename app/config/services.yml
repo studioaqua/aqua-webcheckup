@@ -1,9 +1,9 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
-parameters:
-#    parameter_name: value
+#parameters:
+#    website: Aqua\WebCheckupBundle\Entity\Website
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    web_rank:
+        class: Aqua\WebCheckupBundle\Model\WebRank
+        arguments: ["@logger", "@buzz"]
