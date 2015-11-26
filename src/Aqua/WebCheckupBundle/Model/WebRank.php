@@ -23,7 +23,8 @@ class WebRank
   // Regular expression
   private $rexp_title = '/<title>(.*?)<\/title>/';
   private $rexp_flash_calls = "/(\.swf|swfobject.js|swfobject.)/";
-  private $rexp_css_media = "/\@media[\w\s\(-]+:[\s]+([0-9]*)px\)[\s]*\{([\s\w\{\}#-:;]*)\}/";
+  //private $rexp_css_media = "/\@media[\w\s\(-]+:[\s]+([0-9]*)px\)[\s]*\{([\s\w\{\}#-:;]*)\}/";
+  private $rexp_css_media = "/@media.+?[\)^]/";
   private $rexp_phone = "/(Phone|Tel|Telefono)/";
 
   // Excludes these js libraries from responsive checkup, because
@@ -119,6 +120,10 @@ class WebRank
             $response = $this->browser->get($href);
             $css_source = $response->getContent();
 
+            /*
+            $this->logger->debug('[is_responsive] CSS content => @content',
+              array('@content' => $css_source));
+            */
             preg_match_all($this->rexp_css_media, $css_source, $match);
 
             $this->logger->info('[is_responsive] CSS file {href} processed.',
@@ -126,6 +131,7 @@ class WebRank
 
             if (!empty($match[0]))
             {
+              /*
               // When we find a "@media" directive, we will check the presence
               // of max-/min-width statements for mobile or tablet devices
               // (i.e. width < 768px).
@@ -135,6 +141,7 @@ class WebRank
               $break_point_array = $match[1];
               foreach ($break_point_array as $key => $value)
               {
+
                 // Remove trailer } and all beginning/trailing white spaces.
                 $css_rules = trim(rtrim($match[2][$key], "}"));
 
@@ -145,6 +152,10 @@ class WebRank
                   return TRUE;
                 }
               }
+              */
+
+              $this->logger->info('[is_responsive] YES');
+              return TRUE;
             }
           }
           else

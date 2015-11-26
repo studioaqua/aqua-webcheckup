@@ -84,7 +84,7 @@ class Website
       return $this->htmlSource;
   }
 
-  public function sethHtmlSource($htmlSource)
+  public function setHtmlSource($htmlSource)
   {
       $this->htmlSource = $htmlSource;
   }
