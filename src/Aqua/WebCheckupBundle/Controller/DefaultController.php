@@ -36,14 +36,21 @@ class DefaultController extends Controller
       $logger->debug('Check url @url',
               array('@url' => $website->getWebsite()));
 
+      // Calculate the rank for this URL.
+      // The URL is the elemet with index = 1
+      $webrank = $this->get('web_rank');
+
+      $webrank->runCheckup($website);
+
       // Get buzz browser.
-      $buzz = $this->container->get('buzz');
-      $response = $buzz->get($website->getWebsite());
+      //$buzz = $this->container->get('buzz');
+      //$response = $buzz->get($website->getWebsite());
       /*
       $logger->debug('Response => @content',
               array('@content' => var_export($response, TRUE)));
       */
 
+      /*
       if ($response->getStatusCode() == 200) {
 
         $website->setHtmlSource($response->getContent());
@@ -53,12 +60,7 @@ class DefaultController extends Controller
         $webrank = $this->get('web_rank');
 
         $webrank->runCheckup($website);
-        /*
-        $logger->info('Result {website}', array(
-            'website' => var_export($website, TRUE)
-          )
-        );
-        */
+
         return $this->render(
           'AquaWebCheckupBundle:Default:results.html.twig',
           array(
@@ -70,6 +72,7 @@ class DefaultController extends Controller
       {
         $logger->error($response->getContent());
       }
+      */
     }
 
     return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(

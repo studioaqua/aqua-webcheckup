@@ -6,12 +6,18 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Aqua\WebCheckupBundle\Entity\Website;
 use Buzz\Browser;
-//use Monolog\Processor\PsrLogMessageProcessor;
+use Buzz\Exception\RequestException;
+
+define('GOOGLE_MOBILE_CHECK_URL',
+  'https://www.google.com/webmasters/tools/mobile-friendly/?hl=it&url=');
 
 class WebRank
 {
   // Logger
   private $logger;
+
+  // Google PageSpeed API Client
+  private $page_speed;
 
   // Browser
   private $browser;
@@ -40,6 +46,12 @@ class WebRank
     // Init Logger
     $this->logger = $logger;
 
+    // Init Google API Client
+    $this->page_speed = new \PageSpeed\Insights\Service();
+    /*
+    $this->google_client->setApplicationName("Web Checkup");
+    $this->google_client->setDeveloperKey("AIzaSyA-6Q41S5-Rai9nV4vCpxr4WvBG7TEBGJ4");
+    */
     // Init browser
     $this->browser = $browser;
 
@@ -85,101 +97,53 @@ class WebRank
   }
 
   /**
-   * This function checks if a given html code is responsive.
-   * To do this, it verifies if the CSS files linked in this code contains
-   * the media query directive @media. If it has, it will be responsive.
-   *
-   * @param  string  $html_source
-   * @return boolean
+   * [is_mobile_friendly description]
+   * @param  [type]  $url [description]
+   * @return boolean      [description]
    */
-  private function is_responsive($html_source)
+  private function is_mobile_friendly($url)
   {
-    // Init output variable
-    $output = FALSE;
-
-    // Create the lock file
-    $fh = fopen($this->lock_filename_respo, 'w');
-
-    if (empty($html_source))
+    if (filter_var($url, FILTER_VALIDATE_URL) === FALSE)
     {
-      $this->logger->warn('[is_responsive] The HTML is empty');
+      $this->logger->error(
+        sprintf('%s is not a valid URL.', $url)
+      );
+      return FALSE;
     }
     else
     {
-      $crawler = new Crawler();
-      $crawler->addContent($html_source);
-
-      $is_responsive_flag = $crawler->filter('link')->each(
-        function (Crawler $node, $i)
-        {
-          $href = $node->attr('href');
-
-          if (($node->attr('type') == 'text/css')
-            && (!$this->strposa($href, $this->exclude_css_libraries)))
-          {
-            $response = $this->browser->get($href);
-            $css_source = $response->getContent();
-
-            /*
-            $this->logger->debug('[is_responsive] CSS content => @content',
-              array('@content' => $css_source));
-            */
-            preg_match_all($this->rexp_css_media, $css_source, $match);
-
-            $this->logger->info('[is_responsive] CSS file {href} processed.',
-              array('href' => $href));
-
-            if (!empty($match[0]))
-            {
-              /*
-              // When we find a "@media" directive, we will check the presence
-              // of max-/min-width statements for mobile or tablet devices
-              // (i.e. width < 768px).
-              // If we find we will break the "for-cycle", because we don't
-              // need to go forward with the responsive check
-              // for this html.
-              $break_point_array = $match[1];
-              foreach ($break_point_array as $key => $value)
-              {
-
-                // Remove trailer } and all beginning/trailing white spaces.
-                $css_rules = trim(rtrim($match[2][$key], "}"));
-
-                if ((intval($value) < 768)
-                  && (!empty($css_rules)))
-                {
-                  $this->logger->info('[is_responsive] YES');
-                  return TRUE;
-                }
-              }
-              */
-
-              $this->logger->info('[is_responsive] YES');
-              return TRUE;
-            }
-          }
-          else
-          {
-            $this->logger->debug('[is_responsive] CSS file {href} excluded.',
-              array('href' => $href));
-          }
-        }
+      $this->logger->debug(
+          sprintf('Checking %s',  $url)
       );
 
-      if (in_array(TRUE, $is_responsive_flag))
+      try {
+
+      }
+      catch(RequestException $e)
       {
-        $output = TRUE;
+        $this->logger->error($e->getMessage());
+        return FALSE;
       }
     }
 
-
-    // Delete lock file
-    fclose($fh);
-    unlink($this->lock_filename_respo);
-
-    return $output;
   }
 
+  /**
+   * @param $url
+   * @param $apiKey
+   * @return mixed
+   */
+  private function isMobileReady($url, $apiKey)
+  {
+      $curl = curl_init();
+      curl_setopt_array($curl, array(
+          CURLOPT_RETURNTRANSFER => 1,
+          CURLOPT_URL => 'https://www.googleapis.com/pagespeedonline/v3beta1/mobileReady?key='.$apiKey.'&url='.$url.'&strategy=mobile',
+      ));
+      $resp = curl_exec($curl);
+      curl_close($curl);
+      return $resp;
+  }
 
   /**
    * Questa funzione dev'essere chiamata in modo sincrono, finché non è stato
@@ -189,44 +153,18 @@ class WebRank
    */
   public function runCheckup(Website &$website)
   {
-    // Create the lock file
-    $fh = fopen($this->lock_filename, 'w');
 
-    // Is a flash website?
-    $website->setFlash(
-      $this->has_flash($website->getHtmlSource()));
-    if ($website->isFlash())
-    {
-      $website->setRank(-5);
-    }
-    else
-    {
-      $website->setRank(1);
-    }
+    // Mobile friendly checkup.
+    $mobile_result = json_decode(
+      $this->isMobileReady(
+        $website->getWebsite(), 'AIzaSyA-6Q41S5-Rai9nV4vCpxr4WvBG7TEBGJ4'), true);
 
-    // Wait until lock file exists
-    while( file_exists($this->lock_filename_respo) )
-    {
-      //$this->logger->debug('Wait responsive');
-      //sleep(1);
-      echo ':';
-    }
+    //$this->logger->debug('Page speed => ' . var_export($mobile_result['ruleGroups']['USABILITY'], TRUE));
 
-    // Is a responsive website?
-    $website->setResponsive(
-      $this->is_responsive($website->getHtmlSource()));
-    if ($website->isResponsive())
-    {
-      $website->setRank(2);
-    }
-    else
-    {
-      $website->setRank(-3);
-    }
+    $website->setMobileFriendly($mobile_result['ruleGroups']['USABILITY']['pass']);
+    $website->setMobileScore($mobile_result['ruleGroups']['USABILITY']['score']);
 
-    // Delete lock file
-    fclose($fh);
-    unlink($this->lock_filename);
+    $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 
   }
 

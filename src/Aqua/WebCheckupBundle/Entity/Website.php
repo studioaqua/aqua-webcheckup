@@ -13,13 +13,8 @@ class Website
    * @Assert\Url()
    */
   protected $website;
-
-  private $name;
-  private $flash = FALSE;
-  private $responsive = FALSE;
-  private $rank = 0;
-  private $htmlSource;
-
+  private $mobileFriendly = FALSE;
+  private $mobileScore = 0;
 
   public function getWebsite()
   {
@@ -41,52 +36,27 @@ class Website
       $this->name = $name;
   }
 
-  public function isFlash()
+  public function isMobileFriendly()
   {
-      return $this->flash;
+      return $this->mobileFriendly;
   }
-  public function isFlashLiteral()
+  public function isMobileFriendlyLiteral()
   {
-      return ($this->flash) ? 'Yes' : 'No';
-  }
-
-  public function setFlash($flash)
-  {
-      $this->flash = $flash;
+      return ($this->mobileFriendly) ? 'Yes' : 'No';
   }
 
-  public function isResponsive()
+  public function setMobileFriendly($mobileFriendly)
   {
-      return $this->responsive;
-  }
-  public function isResponsiveLiteral()
-  {
-      return ($this->responsive) ? 'Yes' : 'No';
+      $this->mobileFriendly = $mobileFriendly;
   }
 
-  public function setResponsive($responsive)
+  public function getMobileScore()
   {
-      $this->responsive = $responsive;
+      return $this->mobileScore;
   }
 
-  public function getRank()
+  public function setMobileScore($mobileScore)
   {
-      return $this->rank;
+      $this->mobileScore += $mobileScore;
   }
-
-  public function setRank($rank)
-  {
-      $this->rank += $rank;
-  }
-
-  public function getHtmlSource()
-  {
-      return $this->htmlSource;
-  }
-
-  public function setHtmlSource($htmlSource)
-  {
-      $this->htmlSource = $htmlSource;
-  }
-
 }
