@@ -13,7 +13,7 @@ class Website
    * @Assert\Url()
    */
   protected $website;
-  private $mobileFriendly = FALSE;
+  private $mobileReady = FALSE;
   private $mobileScore = 0;
 
   public function getWebsite()
@@ -36,18 +36,18 @@ class Website
       $this->name = $name;
   }
 
-  public function isMobileFriendly()
+  public function isMobileReady()
   {
-      return $this->mobileFriendly;
+      return $this->mobileReady;
   }
-  public function isMobileFriendlyLiteral()
+  public function isMobileReadyLiteral()
   {
-      return ($this->mobileFriendly) ? 'Yes' : 'No';
+      return ($this->mobileReady) ? 'Yes' : 'No';
   }
 
-  public function setMobileFriendly($mobileFriendly)
+  public function setMobileReady($mobileReady)
   {
-      $this->mobileFriendly = $mobileFriendly;
+      $this->mobileReady = $mobileReady;
   }
 
   public function getMobileScore()
