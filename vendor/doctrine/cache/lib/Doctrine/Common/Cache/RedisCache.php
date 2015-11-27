@@ -69,6 +69,21 @@ class RedisCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
+    protected function doFetchMultiple(array $keys)
+    {
+        $fetchedItems = $this->redis->mget($keys);
+
+        return array_filter(
+            array_combine($keys, $fetchedItems),
+            function ($value) {
+                return $value !== false;
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doContains($id)
     {
         return $this->redis->exists($id);
@@ -91,7 +106,7 @@ class RedisCache extends CacheProvider
      */
     protected function doDelete($id)
     {
-        return $this->redis->delete($id) > 0;
+        return $this->redis->delete($id) >= 0;
     }
 
     /**
@@ -109,8 +124,8 @@ class RedisCache extends CacheProvider
     {
         $info = $this->redis->info();
         return array(
-            Cache::STATS_HITS   => false,
-            Cache::STATS_MISSES => false,
+            Cache::STATS_HITS   => $info['keyspace_hits'],
+            Cache::STATS_MISSES => $info['keyspace_misses'],
             Cache::STATS_UPTIME => $info['uptime_in_seconds'],
             Cache::STATS_MEMORY_USAGE      => $info['used_memory'],
             Cache::STATS_MEMORY_AVAILABLE  => false

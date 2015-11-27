@@ -93,7 +93,7 @@ class Parser
                 // array
                 if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#')) {
                     $c = $this->getRealCurrentLineNb() + 1;
-                    $parser = new Parser($c);
+                    $parser = new self($c);
                     $parser->refs = &$this->refs;
                     $data[] = $parser->parse($this->getNextEmbedBlock(null, true), $exceptionOnInvalidType, $objectSupport, $objectForMap);
                 } else {
@@ -102,7 +102,7 @@ class Parser
                     ) {
                         // this is a compact notation element, add to next block and parse
                         $c = $this->getRealCurrentLineNb();
-                        $parser = new Parser($c);
+                        $parser = new self($c);
                         $parser->refs = &$this->refs;
 
                         $block = $values['value'];
@@ -159,7 +159,7 @@ class Parser
                             $value = $this->getNextEmbedBlock();
                         }
                         $c = $this->getRealCurrentLineNb() + 1;
-                        $parser = new Parser($c);
+                        $parser = new self($c);
                         $parser->refs = &$this->refs;
                         $parsed = $parser->parse($value, $exceptionOnInvalidType, $objectSupport, $objectForMap);
 
@@ -210,7 +210,7 @@ class Parser
                         }
                     } else {
                         $c = $this->getRealCurrentLineNb() + 1;
-                        $parser = new Parser($c);
+                        $parser = new self($c);
                         $parser->refs = &$this->refs;
                         $value = $parser->parse($this->getNextEmbedBlock(), $exceptionOnInvalidType, $objectSupport, $objectForMap);
                         // Spec: Keys MUST be unique; first one wins.
@@ -234,7 +234,7 @@ class Parser
                 }
 
                 // 1-liner optionally followed by newline(s)
-                if ($this->lines[0] === trim($value)) {
+                if (is_string($value) && $this->lines[0] === trim($value)) {
                     try {
                         $value = Inline::parse($this->lines[0], $exceptionOnInvalidType, $objectSupport, $objectForMap, $this->refs);
                     } catch (ParseException $e) {
@@ -546,9 +546,9 @@ class Parser
 
         // deal with trailing newlines as indicated
         if ('' === $indicator) {
-            $text = preg_replace('/\n+$/s', "\n", $text);
+            $text = preg_replace('/\n+$/', "\n", $text);
         } elseif ('-' === $indicator) {
-            $text = preg_replace('/\n+$/s', '', $text);
+            $text = preg_replace('/\n+$/', '', $text);
         }
 
         return $text;
@@ -647,7 +647,7 @@ class Parser
             $value = $trimmedValue;
 
             // remove end of the document marker (...)
-            $value = preg_replace('#\.\.\.\s*$#s', '', $value);
+            $value = preg_replace('#\.\.\.\s*$#', '', $value);
         }
 
         return $value;
