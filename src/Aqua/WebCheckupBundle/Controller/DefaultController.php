@@ -42,6 +42,17 @@ class DefaultController extends Controller
 
       $webrank->runCheckup($website);
 
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($website);
+      $em->flush();
+
+      return $this->render(
+        'AquaWebCheckupBundle:Default:results.html.twig',
+        array(
+          'website' => $website,
+        )
+      );
+
       // Get buzz browser.
       //$buzz = $this->container->get('buzz');
       //$response = $buzz->get($website->getWebsite());
@@ -74,10 +85,12 @@ class DefaultController extends Controller
       }
       */
     }
-
-    return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
-        'form' => $form->createView(),
-    ));
+    else
+    {
+      return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
+          'form' => $form->createView(),
+      ));
+    }
   }
 
   public function resultsAction()

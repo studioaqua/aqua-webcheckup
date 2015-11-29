@@ -10,9 +10,8 @@
 
             <div id="content">
                 <ul>
-                    <li>Has flash: {{ website.isFlashLiteral() }}</li>
-                    <li>Is Responsive: {{ website.isResponsiveLiteral() }}</li>
-                    <li>Rank: {{ website.getRank() }}</li>
+                    <li>Is mobile ready: {{ website.isMobileReadyLiteral() }}</li>
+                    <li>Mobile score: {{ website.getMobileScore() }}</li>
                 </ul>
                 <a href="{{ path('aqua_web_checkup_homepage') }}">
                     Esegui un altro check

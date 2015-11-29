@@ -6,4 +6,4 @@
 services:
     web_rank:
         class: Aqua\WebCheckupBundle\Model\WebRank
-        arguments: ["@logger", "@buzz"]
+        arguments: ["@logger"]

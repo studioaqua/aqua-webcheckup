@@ -17,47 +17,56 @@ class WebRank
   private $logger;
 
   // Google PageSpeed API Client
-  private $page_speed;
+  //private $page_speed;
+
+  // Doctrine EntityManager
+  //private $em;
+
+
 
   // Browser
-  private $browser;
+  //private $browser;
 
   // Lock filename
-  private $lock_filename = '';
-  private $lock_filename_respo = '';
+  //private $lock_filename = '';
+  //private $lock_filename_respo = '';
 
   // Regular expression
-  private $rexp_title = '/<title>(.*?)<\/title>/';
-  private $rexp_flash_calls = "/(\.swf|swfobject.js|swfobject.)/";
+  //private $rexp_title = '/<title>(.*?)<\/title>/';
+  //private $rexp_flash_calls = "/(\.swf|swfobject.js|swfobject.)/";
   //private $rexp_css_media = "/\@media[\w\s\(-]+:[\s]+([0-9]*)px\)[\s]*\{([\s\w\{\}#-:;]*)\}/";
-  private $rexp_css_media = "/@media.+?[\)^]/";
-  private $rexp_phone = "/(Phone|Tel|Telefono)/";
+  //private $rexp_css_media = "/@media.+?[\)^]/";
+  //private $rexp_phone = "/(Phone|Tel|Telefono)/";
 
   // Excludes these js libraries from responsive checkup, because
   // we can find a @media query string inside the library's css but
   // the whole website is not responsive.
-  private $exclude_css_libraries = array(
-    'jquery.fancybox',
-    'fonts.googleapis',
-  );
+  //private $exclude_css_libraries = array(
+  //  'jquery.fancybox',
+  //  'fonts.googleapis',
+  //);
 
-  public function __construct(LoggerInterface $logger, Browser $browser)
+  public function __construct(LoggerInterface $logger)
   {
     // Init Logger
     $this->logger = $logger;
 
     // Init Google API Client
-    $this->page_speed = new \PageSpeed\Insights\Service();
+    //$this->page_speed = new \PageSpeed\Insights\Service();
     /*
     $this->google_client->setApplicationName("Web Checkup");
     $this->google_client->setDeveloperKey("AIzaSyA-6Q41S5-Rai9nV4vCpxr4WvBG7TEBGJ4");
     */
+
+    // Init Doctrine EntityManager
+    //$this->em = $em;
+
     // Init browser
-    $this->browser = $browser;
+    //$this->browser = $browser;
 
     // Init lock filename
-    $this->lock_filename = dirname(__FILE__) . '/.lock';
-    $this->lock_filename_respo = dirname(__FILE__) . '/.lock.respo';
+    //$this->lock_filename = dirname(__FILE__) . '/.lock';
+    //$this->lock_filename_respo = dirname(__FILE__) . '/.lock.respo';
 
     $this->logger->debug('Init WebRank');
   }
@@ -76,12 +85,9 @@ class WebRank
    * @param  string  $html_source
    * @return boolean
    */
+/*
   private function has_flash($html_source)
   {
-    /**
-     * @todo migliorare l'accuratezza nell'identificare un sito in falsh
-     */
-
     preg_match_all($this->rexp_flash_calls, $html_source, $match);
 
     if (empty($match[1]))
@@ -95,12 +101,14 @@ class WebRank
       return TRUE;
     }
   }
+*/
 
   /**
    * [is_mobile_friendly description]
    * @param  [type]  $url [description]
    * @return boolean      [description]
    */
+/*
   private function is_mobile_friendly($url)
   {
     if (filter_var($url, FILTER_VALIDATE_URL) === FALSE)
@@ -127,10 +135,14 @@ class WebRank
     }
 
   }
+*/
 
   /**
-   * @param $url
-   * @param $apiKey
+   * Checks if a website is mobile ready.
+   * Use Google PageSpeed mobile ready API.
+   *
+   * @param string $url
+   * @param string $apiKey
    * @return mixed
    */
   private function isMobileReady($url, $apiKey)
@@ -161,20 +173,14 @@ class WebRank
 
     //$this->logger->debug('Page speed => ' . var_export($mobile_result['ruleGroups']['USABILITY'], TRUE));
 
-    $website->setMobileFriendly($mobile_result['ruleGroups']['USABILITY']['pass']);
+    $website->setMobileReady($mobile_result['ruleGroups']['USABILITY']['pass']);
     $website->setMobileScore($mobile_result['ruleGroups']['USABILITY']['score']);
 
     $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 
   }
 
-
-  protected function get_phone($html_source)
-  {
-
-  }
-
-
+/*
   private function strposa($haystack, $needle, $offset=0)
   {
     if(!is_array($needle))
@@ -192,6 +198,7 @@ class WebRank
     }
     return false;
   }
+*/
 
 }
 
