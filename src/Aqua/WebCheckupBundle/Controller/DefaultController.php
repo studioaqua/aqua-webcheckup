@@ -53,37 +53,6 @@ class DefaultController extends Controller
         )
       );
 
-      // Get buzz browser.
-      //$buzz = $this->container->get('buzz');
-      //$response = $buzz->get($website->getWebsite());
-      /*
-      $logger->debug('Response => @content',
-              array('@content' => var_export($response, TRUE)));
-      */
-
-      /*
-      if ($response->getStatusCode() == 200) {
-
-        $website->setHtmlSource($response->getContent());
-
-        // Calculate the rank for this URL.
-        // The URL is the elemet with index = 1
-        $webrank = $this->get('web_rank');
-
-        $webrank->runCheckup($website);
-
-        return $this->render(
-          'AquaWebCheckupBundle:Default:results.html.twig',
-          array(
-            'website' => $website,
-          )
-        );
-      }
-      else
-      {
-        $logger->error($response->getContent());
-      }
-      */
     }
     else
     {
@@ -93,8 +62,4 @@ class DefaultController extends Controller
     }
   }
 
-  public function resultsAction()
-  {
-    return $this->render('AquaWebCheckupBundle:Default:results.html.twig');
-  }
 }

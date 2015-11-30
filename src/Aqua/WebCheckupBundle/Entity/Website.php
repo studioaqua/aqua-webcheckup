@@ -27,7 +27,7 @@ class Website
     * @ORM\Column(length=255)
     * @Assert\Url()
     */
-    protected $website;
+    protected $website = 'http://';
 
     /**
     * @ORM\Column(type="boolean", name="mobile_ready")
