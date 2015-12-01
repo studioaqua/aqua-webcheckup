@@ -3,7 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}How healthy is your website?{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}" />
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap-theme.min.css') }}" />
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset('assets/vendor/nprogress/nprogress.css') }}" />
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset('bundles/aquawebcheckup/css/main.css') }}" />
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>

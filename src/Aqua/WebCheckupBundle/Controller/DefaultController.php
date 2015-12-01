@@ -23,7 +23,7 @@ class DefaultController extends Controller
 
     $form = $this->createFormBuilder($website)
         ->add('website', 'text')
-        ->add('checkup', 'submit', array('label' => 'Check Up'))
+        ->add('checkup', 'submit', array('label' => 'Check It!'))
         ->getForm();
 
     $form->handleRequest($request);

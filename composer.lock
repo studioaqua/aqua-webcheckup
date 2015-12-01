@@ -4,119 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c1a270dae953bfbe05677bc5f18794fe",
-    "content-hash": "bd1e1343ac3d9ff9d93379e0a334bf16",
+    "hash": "38afedbb2b827334b0a7891b3959b94a",
+    "content-hash": "10935b1b0163d3276790780c822ad199",
     "packages": [
-        {
-            "name": "components/bootstrap",
-            "version": "3.3.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/components/bootstrap.git",
-                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/components/bootstrap/zipball/fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
-                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
-                "shasum": ""
-            },
-            "require": {
-                "components/jquery": "1.9.1 - 2"
-            },
-            "suggest": {
-                "components/bootstrap-default": "Provide a theme for Bootstrap as components/bootstrap only provides the CSS as file assets"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "js/bootstrap.js"
-                    ],
-                    "files": [
-                        "js/*.js",
-                        "css/*.css",
-                        "css/*.map",
-                        "fonts/*",
-                        "less/mixins/*.less",
-                        "less/*.less"
-                    ],
-                    "shim": {
-                        "deps": [
-                            "jquery"
-                        ]
-                    }
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jacob Thornton",
-                    "email": "jacobthornton@gmail.com"
-                },
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
-                }
-            ],
-            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "homepage": "http://getbootstrap.com",
-            "keywords": [
-                "css",
-                "framework",
-                "front-end",
-                "less",
-                "mobile-first",
-                "responsive",
-                "web"
-            ],
-            "time": "2015-11-24 20:19:41"
-        },
-        {
-            "name": "components/jquery",
-            "version": "2.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/components/jquery.git",
-                "reference": "7b1d1104656a092423fbfba13c5920e9bbba290c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/7b1d1104656a092423fbfba13c5920e9bbba290c",
-                "reference": "7b1d1104656a092423fbfba13c5920e9bbba290c",
-                "shasum": ""
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "jquery.js"
-                    ],
-                    "files": [
-                        "jquery.min.js",
-                        "jquery.min.map",
-                        "jquery-migrate.js",
-                        "jquery-migrate.min.js"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "John Resig",
-                    "email": "jeresig@gmail.com"
-                }
-            ],
-            "description": "jQuery JavaScript Library",
-            "homepage": "http://jquery.com",
-            "time": "2015-05-08 05:04:47"
-        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.7",
@@ -459,16 +349,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "a5b3ba908ba68f3e14e42762a7b940fde65ed7da"
+                "reference": "c4ffef2b2296e9d0179eb0b5248e5ae25c9bba3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/a5b3ba908ba68f3e14e42762a7b940fde65ed7da",
-                "reference": "a5b3ba908ba68f3e14e42762a7b940fde65ed7da",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/c4ffef2b2296e9d0179eb0b5248e5ae25c9bba3b",
+                "reference": "c4ffef2b2296e9d0179eb0b5248e5ae25c9bba3b",
                 "shasum": ""
             },
             "require": {
@@ -533,7 +423,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2015-11-04 21:33:02"
+            "time": "2015-11-16 17:11:46"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",

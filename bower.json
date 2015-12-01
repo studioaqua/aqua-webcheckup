@@ -1,0 +1,23 @@
+{
+  "name": "aqua-webcheckup",
+  "homepage": "https://github.com/studioaqua/aqua-webcheckup",
+  "authors": [
+    "Roberto Peruzzo <roberto.peruzzo@gmail.com>"
+  ],
+  "description": "Check out your website helth",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "nprogress": "~0.2.0",
+    "bootstrap": "~3.3.6"
+  }
+}
