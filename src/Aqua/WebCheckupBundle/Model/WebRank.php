@@ -18,7 +18,7 @@ class WebRank
   private $logger;
 
   // Google PageSpeed API Client
-  //private $page_speed;
+  private $pageSpeed;
 
   public function __construct(LoggerInterface $logger)
   {
@@ -26,7 +26,7 @@ class WebRank
     $this->logger = $logger;
 
     // Init Google API Client
-    //$this->page_speed = new \PageSpeed\Insights\Service();
+    $this->pageSpeed = new \PageSpeed\Insights\Service();
     /*
     $this->google_client->setApplicationName("Web Checkup");
     $this->google_client->setDeveloperKey("AIzaSyA-6Q41S5-Rai9nV4vCpxr4WvBG7TEBGJ4");
@@ -45,15 +45,16 @@ class WebRank
    */
   private function isMobileReady($url, $apiKey)
   {
-      $curl = curl_init();
-      curl_setopt_array($curl, array(
-          CURLOPT_RETURNTRANSFER => 1,
-          CURLOPT_URL => sprintf(GOOGLE_MOBILE_CHECK_URL, $apiKey, $url),
-        )
-      );
-      $resp = curl_exec($curl);
-      curl_close($curl);
-      return $resp;
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => sprintf(GOOGLE_MOBILE_CHECK_URL, $apiKey, $url),
+      )
+    );
+    $resp = curl_exec($curl);
+    curl_close($curl);
+
+    return json_decode($resp, TRUE);
   }
 
   /**
@@ -65,15 +66,25 @@ class WebRank
   public function runCheckup(Website &$website)
   {
 
-    // Mobile friendly checkup.
-    $mobile_result = json_decode(
-      $this->isMobileReady(
-        $website->getWebsite(), GOOGLE_API_KEY), true);
+    /*
+    Mobile friendly checkup.
+     */
+    $mobile_result = $this->isMobileReady(
+      $website->getWebsite(), GOOGLE_API_KEY);
 
-    //$this->logger->debug('Page speed => ' . var_export($mobile_result['ruleGroups']['USABILITY'], TRUE));
+    //$mobile_result = $this->isMobileReady($website->getWebsite(), GOOGLE_API_KEY);
+    //$this->logger->debug(var_export($mobile_result, TRUE));
 
     $website->setMobileReady($mobile_result['ruleGroups']['USABILITY']['pass']);
     $website->setMobileScore($mobile_result['ruleGroups']['USABILITY']['score']);
+
+    /*
+    Page Speed.
+     */
+    $pageSpeed_result = $this->pageSpeed->getResults(
+      $website->getWebsite(), 'it_IT', 'mobile');
+    $website->setTitle($pageSpeed_result['title']);
+    $website->setMobilePageSpeed($pageSpeed_result['ruleGroups']['SPEED']['score']);
 
     $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 

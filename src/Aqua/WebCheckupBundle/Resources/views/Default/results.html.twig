@@ -4,13 +4,17 @@
     <div id="wrapper">
         <div id="container">
             <div id="welcome">
-                <h1>{{ website.getWebsite() }}</h1>
+                <h1>{{ website.getTitle() }}</h1>
+                <h2>{{ website.getWebsite() }}</h2>
             </div>
 
             <div id="content">
                 <ul>
                     <li>Is mobile ready: {{ website.isMobileReadyLiteral() }}</li>
-                    <li>Mobile score: {{ website.getMobileScore() }} / 100</li>
+                    <li>Mobile score: {{ website.getMobileScore() }} / 100<br />
+                        <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chtt=Usability&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobileScore() }}&amp;chxt=x,y&amp;chxl=0:||1:|poor||best" width="240" height="100" alt="Mobile score" /></li>
+                    <li>Mobile speed: {{ website.getMobilePageSpeed() }} / 100<br />
+                        <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chtt=Speed&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobilePageSpeed() }}&amp;chxt=x,y&amp;chxl=0:||1:|slow||fast" width="240" height="100" alt="Mobile page speed" /></li>
                 </ul>
                 <a href="{{ path('aqua_web_checkup_homepage') }}">
                     Esegui un altro check

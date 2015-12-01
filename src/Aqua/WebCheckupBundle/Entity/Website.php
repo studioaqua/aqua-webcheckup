@@ -17,33 +17,42 @@ class Website
 {
 
     /**
-    * @ORM\Column(type="integer", name="wid")
-    * @ORM\Id
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+     * @ORM\Column(type="integer", name="wid")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $websiteId;
 
     /**
-    * @ORM\Column(length=255)
-    * @Assert\Url()
-    */
+     * @ORM\Column(length=255)
+     */
+    protected $title;
+
+    /**
+     * @ORM\Column(length=255)
+     * @Assert\Url()
+     */
     protected $website = 'http://';
 
     /**
-    * @ORM\Column(type="boolean", name="mobile_ready")
-    */
-
+     * @ORM\Column(type="boolean", name="mobile_ready")
+     */
     protected $mobileReady = FALSE;
 
     /**
-    * @ORM\Column(type="integer", name="mobile_score")
-    */
+     * @ORM\Column(type="integer", name="mobile_score")
+     */
     protected $mobileScore = 0;
 
     /**
-    * @ORM\Column(name="created", type="datetime")
-    * @ORM\Version
-    */
+     * @ORM\Column(type="integer", name="mobile_page_speed")
+     */
+    protected $mobilePageSpeed = 0;
+
+    /**
+     * @ORM\Column(name="created", type="datetime")
+     * @ORM\Version
+     */
     protected $created;
 
 
@@ -116,5 +125,51 @@ class Website
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Website
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set mobilePageSpeed
+     *
+     * @param integer $mobilePageSpeed
+     * @return Website
+     */
+    public function setMobilePageSpeed($mobilePageSpeed)
+    {
+        $this->mobilePageSpeed = $mobilePageSpeed;
+
+        return $this;
+    }
+
+    /**
+     * Get mobilePageSpeed
+     *
+     * @return integer
+     */
+    public function getMobilePageSpeed()
+    {
+        return $this->mobilePageSpeed;
     }
 }
