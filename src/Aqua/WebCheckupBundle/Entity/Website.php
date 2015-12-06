@@ -50,6 +50,15 @@ class Website
     protected $mobilePageSpeed = 0;
 
     /**
+     * The max value of an integer is 2147483647, this means
+     * a boundary of 2047,99999904632568 MB. I think there aren't websites
+     * which can reach this limit.
+     *
+     * @ORM\Column(type="integer", name="mobile_response_bytes")
+     */
+    protected $mobileResponseBytes = 0;
+
+    /**
      * @ORM\Column(name="created", type="datetime")
      * @ORM\Version
      */
@@ -67,7 +76,7 @@ class Website
     }
 
     /**
-    * Get mobileReady
+    * Get mobileReady.
     *
     * @return boolean
     */
@@ -95,7 +104,7 @@ class Website
     }
 
     /**
-     * Get websiteId
+     * Get websiteId.
      *
      * @return integer
      */
@@ -105,7 +114,7 @@ class Website
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      * @return Website
@@ -118,7 +127,7 @@ class Website
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -128,7 +137,7 @@ class Website
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      * @return Website
@@ -141,7 +150,7 @@ class Website
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -151,7 +160,7 @@ class Website
     }
 
     /**
-     * Set mobilePageSpeed
+     * Set mobilePageSpeed.
      *
      * @param integer $mobilePageSpeed
      * @return Website
@@ -164,12 +173,45 @@ class Website
     }
 
     /**
-     * Get mobilePageSpeed
+     * Get mobilePageSpeed.
      *
      * @return integer
      */
     public function getMobilePageSpeed()
     {
         return $this->mobilePageSpeed;
+    }
+
+    /**
+     * Set mobileResponseBytes.
+     *
+     * @param integer $mobileResponseBytes
+     * @return Website
+     */
+    public function setMobileResponseBytes($mobileResponseBytes)
+    {
+        $this->mobileResponseBytes = $mobileResponseBytes;
+
+        return $this;
+    }
+
+    /**
+     * Get mobileResponseBytes.
+     *
+     * @return integer
+     */
+    public function getMobileResponseBytes()
+    {
+        return $this->mobileResponseBytes;
+    }
+
+    /**
+     * Get mobileResponseBytes human readable value.
+     *
+     * @return integer
+     */
+    public function getMobileResponseBytesHR()
+    {
+        return number_format(($this->mobileResponseBytes / 1048576), 2); // 1024*1024
     }
 }

@@ -5,17 +5,20 @@ namespace Aqua\WebCheckupBundle\Model;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Aqua\WebCheckupBundle\Entity\Website;
-use Buzz\Browser;
-use Buzz\Exception\RequestException;
-
-define('GOOGLE_MOBILE_CHECK_URL',
-  'https://www.googleapis.com/pagespeedonline/v3beta1/mobileReady?key=%s&url=%s&strategy=mobile');
-define('GOOGLE_API_KEY', 'AIzaSyA-6Q41S5-Rai9nV4vCpxr4WvBG7TEBGJ4');
 
 class WebRank
 {
   // Logger
   private $logger;
+
+  /**
+   * @var string
+   */
+  private $gateway = 'https://www.googleapis.com/pagespeedonline/v3beta1';
+  /**
+   * @var string
+   */
+  private $googleApiKey = 'AIzaSyA-6Q41S5-Rai9nV4vCpxr4WvBG7TEBGJ4';
 
   // Google PageSpeed API Client
   private $pageSpeed;
@@ -43,18 +46,36 @@ class WebRank
    * @param string $apiKey
    * @return mixed
    */
-  private function isMobileReady($url, $apiKey)
+  private function getMobileReadyResults($url, $locale = 'en_US', $strategy = 'mobile')
   {
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_URL => sprintf(GOOGLE_MOBILE_CHECK_URL, $apiKey, $url),
-      )
-    );
-    $resp = curl_exec($curl);
-    curl_close($curl);
 
-    return json_decode($resp, TRUE);
+    $client = new \Guzzle\Service\Client($this->gateway);
+
+    /** @var $request \Guzzle\Http\Message\Request */
+    $request = $client->get('mobileReady');
+    $request->getQuery()
+      ->set('key', $this->googleApiKey)
+      ->set('url', $url)
+      ->set('locale', $locale)
+      ->set('screenshot', FALSE)
+      ->set('strategy', $strategy);
+
+    try
+    {
+      $response = $request->send();
+      $response = $response->getBody();
+      $response = json_decode($response, true);
+
+      return $response;
+    }
+    catch (\Guzzle\Http\Exception\ClientErrorResponseException $e)
+    {
+      $response = $e->getResponse();
+      $response = $response->getBody();
+      $response = json_decode($response);
+
+      throw new RuntimeException($response->error->message, $response->error->code);
+    }
   }
 
   /**
@@ -69,8 +90,7 @@ class WebRank
     /*
     Mobile friendly checkup.
      */
-    $mobile_result = $this->isMobileReady(
-      $website->getWebsite(), GOOGLE_API_KEY);
+    $mobile_result = $this->getMobileReadyResults($website->getWebsite());
 
     //$mobile_result = $this->isMobileReady($website->getWebsite(), GOOGLE_API_KEY);
     //$this->logger->debug(var_export($mobile_result, TRUE));
@@ -85,6 +105,26 @@ class WebRank
       $website->getWebsite(), 'it_IT', 'mobile');
     $website->setTitle($pageSpeed_result['title']);
     $website->setMobilePageSpeed($pageSpeed_result['ruleGroups']['SPEED']['score']);
+
+    $website->setMobileResponseBytes = (int) $pageSpeed_result['pageStats']['htmlResponseBytes'];
+    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['textResponseBytes'])
+      ? $pageSpeed_result['pageStats']['textResponseBytes']
+      : 0;
+    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['cssResponseBytes'])
+      ? $pageSpeed_result['pageStats']['cssResponseBytes']
+      : 0;
+    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['imageResponseBytes'])
+      ? $pageSpeed_result['pageStats']['imageResponseBytes']
+      : 0;
+    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['javascriptResponseBytes'])
+      ? $pageSpeed_result['pageStats']['javascriptResponseBytes']
+      : 0;
+    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['flashResponseBytes'])
+      ? $pageSpeed_result['pageStats']['flashResponseBytes']
+      : 0;
+    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['otherResponseBytes'])
+      ? $pageSpeed_result['pageStats']['otherResponseBytes']
+      : 0;
 
     $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 

@@ -14,7 +14,7 @@
                     <li>Mobile score: {{ website.getMobileScore() }} / 100<br />
                         <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chtt=Usability&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobileScore() }}&amp;chxt=x,y&amp;chxl=0:|{{ website.getMobileScore() }}%|1:|poor|best&amp;chls=3|3" width="240" height="100" alt="Mobile score" /></li>
                     <li>Mobile speed: {{ website.getMobilePageSpeed() }} / 100<br />
-                        <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chtt=Speed&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobilePageSpeed() }}&amp;chxt=x,y&amp;chxl=0:|{{ website.getMobilePageSpeed() }}%|1:|slow|fast" width="240" height="100" alt="Mobile page speed" /></li>
+                        <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chtt=Speed&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobilePageSpeed() }}&amp;chxt=x,y&amp;chxl=0:|{{ website.getMobilePageSpeed() }}%|1:|slow|fast&amp;chls=3|3" width="240" height="100" alt="Mobile page speed" /></li>
                 </ul>
                 <a href="{{ path('aqua_web_checkup_homepage') }}">
                     Esegui un altro check
