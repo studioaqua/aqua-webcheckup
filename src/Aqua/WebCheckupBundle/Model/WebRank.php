@@ -48,7 +48,6 @@ class WebRank
    */
   private function getMobileReadyResults($url, $locale = 'en_US', $strategy = 'mobile')
   {
-
     $client = new \Guzzle\Service\Client($this->gateway);
 
     /** @var $request \Guzzle\Http\Message\Request */
@@ -63,6 +62,7 @@ class WebRank
     try
     {
       $response = $request->send();
+      $this->logger->debug('Response: ' . var_export($response, TRUE));
       $response = $response->getBody();
       $response = json_decode($response, true);
 
@@ -106,26 +106,27 @@ class WebRank
     $website->setTitle($pageSpeed_result['title']);
     $website->setMobilePageSpeed($pageSpeed_result['ruleGroups']['SPEED']['score']);
 
-    $website->setMobileResponseBytes = (int) $pageSpeed_result['pageStats']['htmlResponseBytes'];
-    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['textResponseBytes'])
+    $totalBytes = (int) $pageSpeed_result['pageStats']['htmlResponseBytes'];
+    $totalBytes += (int) isset($pageSpeed_result['pageStats']['textResponseBytes'])
       ? $pageSpeed_result['pageStats']['textResponseBytes']
       : 0;
-    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['cssResponseBytes'])
+    $totalBytes += (int) isset($pageSpeed_result['pageStats']['cssResponseBytes'])
       ? $pageSpeed_result['pageStats']['cssResponseBytes']
       : 0;
-    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['imageResponseBytes'])
+    $totalBytes += (int) isset($pageSpeed_result['pageStats']['imageResponseBytes'])
       ? $pageSpeed_result['pageStats']['imageResponseBytes']
       : 0;
-    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['javascriptResponseBytes'])
+    $totalBytes += (int) isset($pageSpeed_result['pageStats']['javascriptResponseBytes'])
       ? $pageSpeed_result['pageStats']['javascriptResponseBytes']
       : 0;
-    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['flashResponseBytes'])
+    $totalBytes += (int) isset($pageSpeed_result['pageStats']['flashResponseBytes'])
       ? $pageSpeed_result['pageStats']['flashResponseBytes']
       : 0;
-    $website->setMobileResponseBytes += (int) isset($pageSpeed_result['pageStats']['otherResponseBytes'])
+    $totalBytes += (int) isset($pageSpeed_result['pageStats']['otherResponseBytes'])
       ? $pageSpeed_result['pageStats']['otherResponseBytes']
       : 0;
 
+    $website->setMobileResponseBytes($totalBytes);
     $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 
   }
