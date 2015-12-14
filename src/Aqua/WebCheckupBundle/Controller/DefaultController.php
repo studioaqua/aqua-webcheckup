@@ -26,6 +26,7 @@ class DefaultController extends Controller
         ->add('checkup', 'submit', array('label' => 'Check It!'))
         ->getForm();
 
+
     $form->handleRequest($request);
 
     if ($form->isValid())

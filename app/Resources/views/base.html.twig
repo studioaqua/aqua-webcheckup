@@ -4,15 +4,33 @@
         <meta charset="UTF-8" />
         <title>{% block title %}How healthy is your website?{% endblock %}</title>
         {% block stylesheets %}
+            <!-- Fonts -->
+            <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+            <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+            <!-- Vendor -->
             <link type="text/css" rel="stylesheet" media="all" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}" />
             <link type="text/css" rel="stylesheet" media="all" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap-theme.min.css') }}" />
             <link type="text/css" rel="stylesheet" media="all" href="{{ asset('assets/vendor/nprogress/nprogress.css') }}" />
+            <!-- Custom -->
             <link type="text/css" rel="stylesheet" media="all" href="{{ asset('bundles/aquawebcheckup/css/main.css') }}" />
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div id="wrapper">
+            {% block body %}{% endblock %}
+            <footer>
+                <nav class="navbar navbar-default navbar-fixed-bottom">
+                    <div class="container">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#">Info</a></li>
+                            <li><a href="#">Privacy</a></li>
+                            <li><a href="#">Studio Aqua</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </footer>
+        </div>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

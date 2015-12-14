@@ -1,27 +1,25 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div id="wrapper">
-        <div id="container">
-            <div id="welcome">
-                <h1><span>Welcome to</span> Web Checkup</h1>
-                <p>How much healthy is your website?</p>
-            </div>
 
-            <div id="content">
-                <p>
-                    {{ form_start(form, {'attr': {'id': 'form_webcheckup'}}) }}
-                        {{ form_errors(form) }}
-                        {{ form_widget(form.website, { 'attr': {'class': 'form-control'} }) }}
-                        <p class="help-block">Insert your website's URL here.</p>
-                        {{ form_widget(form.checkup, { 'attr': {'class': 'btn btn-default'} }) }}
-                    {{ form_end(form) }}
-                </p>
-            </div>
-
-            <div id="footer">
-                <p>&copy; 2015 Studio Aqua, all rights reserved.</p>
-            </div>
+    <div id="container">
+        <div class="page-header">
+            <h1>How much mobile friendly is your website?</h1>
+        </div>
+        <div id="content">
+            {{ form_start(form, {'attr': {'id': 'form_webcheckup'}}) }}
+                {% if not form.vars.valid %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form_errors(form.website) }}
+                </div>
+                {% endif %}
+                <div class="input-group">
+                    {{ form_widget(form.website, { 'attr': {'class': 'form-control', 'placeholder': 'Insert your website URL (including http://)...'} }) }}
+                    <span class="input-group-btn">
+                        {{ form_widget(form.checkup, { 'attr': {'class': 'btn btn-primary'} }) }}
+                    </span>
+                </div> <!-- /input-group -->
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}
