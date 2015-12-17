@@ -16,7 +16,7 @@ a { color: #0000F0; }
 a:hover { text-decoration: none; }
 code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
 #wrapper { }
-#container { margin: 1em; padding: 2em; max-width: 768px; width: 95%; }
+#container { margin: 1em; padding: 2em 0; max-width: 768px; width: 95%; }
 #welcome, #status, #content { margin-bottom: 2em; }
 #welcome h1 span { display: block; font-size: 75%; }
 #icon-status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
