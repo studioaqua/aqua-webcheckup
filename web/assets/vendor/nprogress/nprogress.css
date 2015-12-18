@@ -50,6 +50,9 @@
   border-radius: 50%;
 
   -webkit-animation: nprogress-spinner 400ms linear infinite;
+     -moz-animation: nprogress-spinner 400ms linear infinite;
+      -ms-animation: nprogress-spinner 400ms linear infinite;
+       -o-animation: nprogress-spinner 400ms linear infinite;
           animation: nprogress-spinner 400ms linear infinite;
 }
 
