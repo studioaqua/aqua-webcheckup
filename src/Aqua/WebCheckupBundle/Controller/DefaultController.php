@@ -22,9 +22,9 @@ class DefaultController extends Controller
     //$website->setWebsite('http://www.yourdomain.name');
 
     $form = $this->createFormBuilder($website)
-        ->add('website', 'text')
-        ->add('checkup', 'submit', array('label' => 'Check It!'))
-        ->getForm();
+    ->add('website', 'text')
+    ->add('checkup', 'submit', array('label' => 'Check It!'))
+    ->getForm();
 
 
     $form->handleRequest($request);
@@ -35,7 +35,7 @@ class DefaultController extends Controller
       $website->setWebsite($form->get('website')->getData());
 
       $logger->debug('Check url @url',
-              array('@url' => $website->getWebsite()));
+          array('@url' => $website->getWebsite()));
 
       // Calculate the rank for this URL.
       // The URL is the elemet with index = 1
@@ -51,16 +51,23 @@ class DefaultController extends Controller
         'AquaWebCheckupBundle:Default:results.html.twig',
         array(
           'website' => $website,
-        )
-      );
+          )
+        );
 
-    }
-    else
-    {
-      return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
-          'form' => $form->createView(),
-      ));
-    }
+  }
+  else
+  {
+    return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
+        'form' => $form->createView(),
+      )
+    );
+  }
+}
+
+
+  public function aboutAction()
+  {
+    return $this->render('AquaWebCheckupBundle:Default:about.html.twig');
   }
 
 }
