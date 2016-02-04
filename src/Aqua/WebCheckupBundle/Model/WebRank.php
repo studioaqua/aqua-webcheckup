@@ -23,6 +23,11 @@ class WebRank
   // Google PageSpeed API Client
   private $pageSpeed;
 
+  /**
+   * @var int
+   */
+  private $energyConsumedPerBit = 7.5E-5;
+
   public function __construct(LoggerInterface $logger)
   {
     // Init Logger
@@ -103,6 +108,8 @@ class WebRank
      */
     $pageSpeed_result = $this->pageSpeed->getResults(
       $website->getWebsite(), 'it_IT', 'mobile');
+    $this->logger->debug(var_export($pageSpeed_result, TRUE));
+
     $website->setTitle($pageSpeed_result['title']);
     $website->setMobilePageSpeed($pageSpeed_result['ruleGroups']['SPEED']['score']);
 
@@ -129,6 +136,9 @@ class WebRank
     $website->setMobileResponseBytes($totalBytes);
     $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 
+    $totalBits = $totalBytes * 8;
+    $totalEnergy = $totalBits * $this->energyConsumedPerBit;
+    $this->logger->debug('Total energy consumed per bit of data (J): ' . $totalEnergy);
   }
 
 }
