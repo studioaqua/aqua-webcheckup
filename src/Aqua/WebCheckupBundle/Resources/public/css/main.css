@@ -26,6 +26,10 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
   text-align: center;
 }
 
+p.text-muted {
+  float: right;
+}
+
 @media (min-width: 768px) {
     #container { width: 80%; margin: 2em auto; }
     #icon-book { display: inline-block; }
