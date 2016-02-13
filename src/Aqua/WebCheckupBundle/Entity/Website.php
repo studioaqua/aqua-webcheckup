@@ -74,6 +74,13 @@ class Website
     protected $mobileResponseBytes = 0;
 
     /**
+     * Total energy consumed for loading the setted URL.
+     *
+     * @ORM\Column(type="float", name="energy_joules")
+     */
+    protected $energyJoules = 0;
+
+    /**
      * @ORM\Column(name="created", type="datetime")
      * @ORM\Version
      */
@@ -229,4 +236,97 @@ class Website
     {
         return number_format(($this->mobileResponseBytes / 1048576), 2); // 1024*1024
     }
+
+    /**
+     * Set energyJoules
+     *
+     * @param float $energyJoules
+     * @return Website
+     */
+    public function setEnergyJoules($energyJoules)
+    {
+        $this->energyJoules = $energyJoules;
+
+        return $this;
+    }
+
+    /**
+     * Get energyJoules
+     *
+     * @return float
+     */
+    public function getEnergyJoules()
+    {
+        return $this->energyJoules;
+    }
+
+    /**
+     * Convert joules in Watt per Seconds. For this measure we choose a
+     * 25W sample. We answer to this question: "How many seconds a 25W light
+     * stays on?".
+     *
+     * @return float
+     *         seconds for a 25W light on.
+     */
+    public function convertJoulesIn25W()
+    {
+        return $this->energyJoules / 25;
+    }
+
+    /**
+     * Returns the human readable time.
+     *
+     * @return string.
+     */
+    protected function convertSecondsHumanReadable($seconds)
+    {
+        if ($seconds < 60)
+        {
+            return number_format($seconds, 2) . ' seconds';
+        }
+        elseif ($seconds >= 60
+            && $seconds < 3600)
+        {
+            return number_format($seconds / 60, 2) . ' minutes';
+        }
+        elseif ($seconds >= 3600
+            && $seconds < 86400)
+        {
+            return number_format($seconds / 3600, 2) . ' hours';
+        }
+        else
+        {
+            return number_format($seconds / 3600, 2) . ' days';
+        }
+    }
+
+    /**
+     * Computes the time amount based on website visitors estimation.
+     *
+     * @param  [int $visitors_number
+     *         estimated visitors number.
+     *
+     * @return float
+     */
+    protected function getTimeForVisitors($visitors_number)
+    {
+        return $this->convertJoulesIn25W() * $visitors_number;
+    }
+
+    public function getTimeFor10Visitors()
+    {
+        return $this->convertSecondsHumanReadable($this->getTimeForVisitors(10));
+    }
+
+    public function getTimeFor500Visitors()
+    {
+        return $this->convertSecondsHumanReadable($this->getTimeForVisitors(500));
+    }
+
+    public function getTimeFor10000Visitors()
+    {
+        return $this->convertSecondsHumanReadable($this->getTimeForVisitors(10000));
+    }
+
+
 }

@@ -25,6 +25,10 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Aqua\WebCheckupBundle\Entity\Website;
 
+define('WATT', 25);
+define('ENERGY_CONSUMED_PER_BIT_LOW', 7.5E-5);
+define('ENERGY_CONSUMED_PER_BIT_HIGH', 7.5E-5);
+
 class WebRank
 {
   // Logger
@@ -45,7 +49,8 @@ class WebRank
   /**
    * @var int
    */
-  private $energyConsumedPerBit = 7.5E-5;
+  //private $energyConsumedPerBit = 7.5E-5;
+
 
   public function __construct(LoggerInterface $logger)
   {
@@ -156,8 +161,9 @@ class WebRank
     $this->logger->debug('Web Checkup result => ' . var_export($website, TRUE));
 
     $totalBits = $totalBytes * 8;
-    $totalEnergy = $totalBits * $this->energyConsumedPerBit;
-    $this->logger->debug('Total energy consumed per bit of data (J): ' . $totalEnergy);
+    $website->setEnergyJoules($totalBits * ENERGY_CONSUMED_PER_BIT_LOW);
+    $this->logger->debug('Total energy consumed per bit of data (J): ' . $website->getEnergyJoules());
+
   }
 
 }

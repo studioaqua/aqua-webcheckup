@@ -44,6 +44,25 @@
                   </div>
             </div>
 
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                        <h3 class="panel-title">Energy</h3>
+                </div>
+                <div class="panel-body">
+                    <p>{{ website.getEnergyJoules() }} Joule consumed.</p>
+                    <p>If your website does <mark>10 visitors</mark>,
+                        it's like leaving a 25W light bulb on for
+                        <mark>{{ website.getTimeFor10Visitors() }}.</mark></p>
+                    <p>If your website does <mark>500 visitors</mark>,
+                        it's like leaving a 25W light bulb on for
+                        <mark>{{ website.getTimeFor500Visitors() }}.</mark></p>
+                    <p>If your website does <mark>10000 visitors</mark>,
+                        it's like leaving a 25W light bulb on for
+                        <mark>{{ website.getTimeFor10000Visitors() }}.</mark></p>
+                </div>
+            </div>
+
+
             <a href="{{ path('aqua_web_checkup_homepage') }}" class="btn btn-primary">
                 <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
                 Do another check-up
