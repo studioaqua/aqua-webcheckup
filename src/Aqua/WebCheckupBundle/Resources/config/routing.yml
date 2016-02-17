@@ -9,3 +9,7 @@ aqua_web_checkup_success:
 aqua_web_checkup_about:
     path:     /about
     defaults: { _controller: AquaWebCheckupBundle:Default:about }
+
+aqua_web_checkup_download:
+    path:     /download
+    defaults: { _controller: AquaWebCheckupBundle:Default:download }

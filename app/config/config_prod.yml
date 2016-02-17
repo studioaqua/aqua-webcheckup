@@ -23,3 +23,13 @@ monolog:
             level: debug
         console:
             type:  console
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     /home/howhealthyisyour/aqua-webcheckup/vendor/message/wkhtmltopdf/bin/wkhtmltopdf-osx
+        options:    []
+    image:
+        enabled:    true
+        binary:     /home/howhealthyisyour/aqua-webcheckup/vendor/message/wkhtmltopdf/bin/wkhtmltopdf-osx
+        options:    []

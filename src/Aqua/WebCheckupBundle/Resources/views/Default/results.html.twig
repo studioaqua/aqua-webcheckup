@@ -64,8 +64,11 @@
 
 
             <a href="{{ path('aqua_web_checkup_homepage') }}" class="btn btn-primary">
-                <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
                 Do another check-up
+            </a>
+
+            <a href="{{ path('aqua_web_checkup_download') }}?id={{ website.getWebsiteId() }}" class="btn btn-primary">
+                Download this check-up
             </a>
         </div>
     </div>

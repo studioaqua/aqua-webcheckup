@@ -5,8 +5,8 @@ namespace Aqua\WebCheckupBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Aqua\WebCheckupBundle\Entity\Website;
-//use Aqua\WebCheckupBundle\Model\WebRank;
 
 class DefaultController extends Controller
 {
@@ -54,20 +54,58 @@ class DefaultController extends Controller
           )
         );
 
+    }
+    else
+    {
+      return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
+          'form' => $form->createView(),
+        )
+      );
+    }
   }
-  else
-  {
-    return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array(
-        'form' => $form->createView(),
-      )
-    );
-  }
-}
 
-
+  /**
+   * [aboutAction description]
+   * @return [type] [description]
+   */
   public function aboutAction()
   {
     return $this->render('AquaWebCheckupBundle:Default:about.html.twig');
+  }
+
+
+  public function downloadAction(Request $request)
+  {
+    $report_id = $request->query->get('id');
+
+    $report = $this->getDoctrine()
+        ->getRepository('AquaWebCheckupBundle:Website')
+        ->find($report_id);
+
+    if (!$report) {
+      throw $this->createNotFoundException(
+        'No report found for id '.$id
+      );
+    }
+
+    // Create the HTML report.
+    $html = $this->renderView(
+      'AquaWebCheckupBundle:Default:results.html.twig',
+      array(
+        'website' => $report,
+      )
+    );
+
+    $filename = 'report_' . $report->getWebsiteId();
+
+    return new Response(
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+      200,
+      array(
+        'Content-Type'          => 'application/pdf',
+        'Content-Disposition'   => 'attachment; filename="' . $filename . '"'
+      )
+    );
   }
 
 }

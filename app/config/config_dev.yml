@@ -46,3 +46,13 @@ assetic:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     /Users/robertoperuzzo/Workspace/aqua-webcheckup/vendor/message/wkhtmltopdf/bin/wkhtmltopdf-osx
+        options:    []
+    image:
+        enabled:    true
+        binary:     /Users/robertoperuzzo/Workspace/aqua-webcheckup/vendor/message/wkhtmltopdf/bin/wkhtmltopdf-osx
+        options:    []

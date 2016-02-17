@@ -1,0 +1,25 @@
+{
+	"name": "message/wkhtmltopdf",
+	"description": "Convert html to pdf using webkit (qtwebkit). Re-packaged with a stable version, with all available binaries.",
+	"keywords": ["pdf", "image", "thumbnail", "snapshot", "wkhtmltopdf", "wkhtmltoimage", "convert", "binary"],
+	"license": "LGPL Version 3",
+	"homepage": "https://code.google.com/p/wkhtmltopdf/",
+	"authors": [
+		{
+			"name": "Laurence Roberts",
+			"email": "laurence@message.co.uk"
+		},
+		{
+			"name": "Joe Holdcroft",
+			"email": "joe@message.co.uk"
+		}
+	],
+	"bin": [
+		"bin/wkhtmltopdf-osx",
+		"bin/wkhtmltopdf-amd64",
+		"bin/wkhtmltopdf-i386",
+		"bin/wkhtmltoimage-osx",
+		"bin/wkhtmltoimage-amd64",
+		"bin/wkhtmltoimage-i386"
+	]
+}

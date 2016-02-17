@@ -16,6 +16,7 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'PageSpeed\\Tests' => array($vendorDir . '/sgrodzicki/pagespeed/tests'),
     'PageSpeed' => array($vendorDir . '/sgrodzicki/pagespeed/src'),
+    'Knp\\Snappy' => array($vendorDir . '/knplabs/knp-snappy/src'),
     'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
     'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
     'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib'),

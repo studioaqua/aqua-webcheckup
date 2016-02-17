@@ -22,7 +22,9 @@
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/form": "~2.6",
-        "sgrodzicki/pagespeed": "^2.0"
+        "sgrodzicki/pagespeed": "^2.0",
+        "knplabs/knp-snappy-bundle": "^1.4",
+        "message/wkhtmltopdf": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
