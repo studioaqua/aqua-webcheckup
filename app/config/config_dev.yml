@@ -54,5 +54,5 @@ knp_snappy:
         options:    []
     image:
         enabled:    true
-        binary:     /Users/robertoperuzzo/Workspace/aqua-webcheckup/vendor/message/wkhtmltopdf/bin/wkhtmltopdf-osx
+        binary:     /Users/robertoperuzzo/Workspace/aqua-webcheckup/vendor/message/wkhtmltopdf/bin/wkhtmltoimage-osx
         options:    []
