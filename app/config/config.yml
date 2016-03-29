@@ -71,3 +71,7 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# Snappy, wrapper for the wkhtmltopdf
+knp_snappy:
+    temporary_folder: %kernel.cache_dir%/snappy

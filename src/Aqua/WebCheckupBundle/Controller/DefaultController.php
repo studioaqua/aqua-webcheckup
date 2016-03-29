@@ -48,7 +48,7 @@ class DefaultController extends Controller
       $em->flush();
 
       return $this->render(
-        'AquaWebCheckupBundle:Default:results.html.twig',
+        'AquaWebCheckupBundle:Default:result.html.twig',
         array(
           'website' => $website,
           )
@@ -73,6 +73,36 @@ class DefaultController extends Controller
     return $this->render('AquaWebCheckupBundle:Default:about.html.twig');
   }
 
+  public function resultAction(Request $request)
+  {
+    $report_id = $request->query->get('id');
+
+    if (!empty($report_id)
+      && is_numeric($report_id))
+    {
+      $report = $this->getDoctrine()
+        ->getRepository('AquaWebCheckupBundle:Website')
+        ->find($report_id);
+
+      if (!$report) {
+        throw $this->createNotFoundException(
+          'No report found for id ' . $report_id
+        );
+      }
+
+      // Create the HTML report.
+      return $this->render(
+        'AquaWebCheckupBundle:Default:result.html.twig',
+        array(
+          'website' => $report,
+        )
+      );
+    }
+    else
+    {
+      return $this->render('AquaWebCheckupBundle:Default:index.html.twig', array());
+    }
+  }
 
   public function downloadAction(Request $request)
   {
@@ -84,28 +114,37 @@ class DefaultController extends Controller
 
     if (!$report) {
       throw $this->createNotFoundException(
-        'No report found for id '.$id
+        'No report found for id ' . $report_id
       );
     }
 
     // Create the HTML report.
     $html = $this->renderView(
-      'AquaWebCheckupBundle:Default:results.html.twig',
+      'AquaWebCheckupBundle:Default:download.html.twig',
       array(
         'website' => $report,
       )
     );
 
+    $this->get('logger')->debug('HTML result @html',
+          array('@html' => $html));
+
     $filename = 'report_' . $report->getWebsiteId();
+    $snappy = $this->get('knp_snappy.pdf');
+
+    $this->get('logger')->debug('Command @cmd',
+            array('@cmd' => $snappy->getInternalGenerator()->getCommand($html, $filename)
+              ));
 
     return new Response(
-      $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-      200,
-      array(
-        'Content-Type'          => 'application/pdf',
-        'Content-Disposition'   => 'attachment; filename="' . $filename . '"'
-      )
-    );
+      $snappy->getOutputFromHtml($html),
+        200,
+        array(
+          'Content-Type'          => 'application/pdf',
+          'Content-Disposition'   => 'attachment; filename="' . $filename . '"'
+        )
+      );
+
   }
 
 }

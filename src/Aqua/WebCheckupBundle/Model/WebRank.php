@@ -27,7 +27,7 @@ use Aqua\WebCheckupBundle\Entity\Website;
 
 define('WATT', 25);
 define('ENERGY_CONSUMED_PER_BIT_LOW', 7.5E-5);
-define('ENERGY_CONSUMED_PER_BIT_HIGH', 7.5E-5);
+define('ENERGY_CONSUMED_PER_BIT_HIGH', 4E-4);
 
 class WebRank
 {
@@ -45,12 +45,6 @@ class WebRank
 
   // Google PageSpeed API Client
   private $pageSpeed;
-
-  /**
-   * @var int
-   */
-  //private $energyConsumedPerBit = 7.5E-5;
-
 
   public function __construct(LoggerInterface $logger)
   {

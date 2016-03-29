@@ -1,0 +1,67 @@
+{% extends 'base-print.html.twig' %}
+
+{% block body %}
+    <div id="container">
+        <div class="page-header">
+            <h1>{{ website.getTitle() }}</h1>
+            <h2>{{ website.getWebsite() }}</h2>
+        </div>
+
+        <div id="content">
+            {% if website.getMobileReady %}
+                <div class="alert alert-success" role="alert">
+                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Well done!</span>
+                    Your website is mobile ready.
+                </div>
+            {% endif %}
+            {% if not website.getMobileReady %}
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Oh snap!</span>
+                    Your website is not mobile ready.
+                </div>
+            {% endif %}
+
+            <div class="panel panel-default">
+                  <div class="panel-heading">
+                        <h3 class="panel-title">Usability</h3>
+                  </div>
+                  <div class="panel-body">
+                        Mobile score: {{ website.getMobileScore() }} / 100
+                        <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobileScore() }}&amp;chxt=x,y&amp;chxl=0:|{{ website.getMobileScore() }}%|1:|poor|best&amp;chls=3|3" width="240" height="100" alt="Mobile score" />
+                  </div>
+            </div>
+
+            <div class="panel panel-default">
+                  <div class="panel-heading">
+                        <h3 class="panel-title">Speed</h3>
+                  </div>
+                  <div class="panel-body">
+                        Mobile speed: {{ website.getMobilePageSpeed() }} / 100
+                        <img src="http://chart.apis.google.com/chart?chs=240x100&amp;cht=gm&amp;chma=
+  10,10,10,10&amp;chco=555555,FF0000|FAFA05|00FF00&amp;chd=t:{{ website.getMobilePageSpeed() }}&amp;chxt=x,y&amp;chxl=0:|{{ website.getMobilePageSpeed() }}%|1:|slow|fast&amp;chls=3|3" width="240" height="100" alt="Mobile page speed" />
+                  </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                        <h3 class="panel-title">Energy</h3>
+                </div>
+                <div class="panel-body">
+                    <p>{{ website.getEnergyJoules() }} Joule consumed.</p>
+                    <p>If your website does <mark>10 visitors</mark>,
+                        it's like leaving a 25W light bulb on for
+                        <mark>{{ website.getTimeFor10Visitors() }}.</mark></p>
+                    <p>If your website does <mark>500 visitors</mark>,
+                        it's like leaving a 25W light bulb on for
+                        <mark>{{ website.getTimeFor500Visitors() }}.</mark></p>
+                    <p>If your website does <mark>10000 visitors</mark>,
+                        it's like leaving a 25W light bulb on for
+                        <mark>{{ website.getTimeFor10000Visitors() }}.</mark></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
