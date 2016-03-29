@@ -121,7 +121,7 @@ class DefaultController extends Controller
     return $this->render(
       'AquaWebCheckupBundle:Default:download.html.twig',
       array(
-        'website' => $website,
+        'website' => $report,
         )
       );
 /*
