@@ -135,6 +135,21 @@ class SwiftmailerExtensionTest extends TestCase
         $this->assertEquals('1000', $container->getParameter('swiftmailer.mailer.third_mailer.transport.smtp.timeout'));
         $this->assertEquals('127.0.0.1', $container->getParameter('swiftmailer.mailer.third_mailer.transport.smtp.source_ip'));
     }
+    /**
+     * @dataProvider getConfigTypes
+     */
+    public function testUrls($type)
+    {
+        $container = $this->loadContainerFromFile('urls', $type);
+
+
+        $this->assertEquals('example.com', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.host'));
+        $this->assertEquals('12345', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.port'));
+        $this->assertEquals('tls', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.encryption'));
+        $this->assertEquals('username', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.username'));
+        $this->assertEquals('password', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.password'));
+        $this->assertEquals('login', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.auth_mode'));
+    }
 
         /**
      * @dataProvider getConfigTypes
@@ -248,7 +263,19 @@ class SwiftmailerExtensionTest extends TestCase
 
         $this->assertSame(array('swiftmailer.default.plugin' => array(array())), $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
         $this->assertSame('single@host.com', $container->getParameter('swiftmailer.mailer.default.single_address'));
+        $this->assertSame(array('single@host.com'), $container->getParameter('swiftmailer.mailer.default.delivery_addresses'));
         $this->assertEquals(array('/foo@.*/'), $container->getParameter('swiftmailer.mailer.default.delivery_whitelist'));
+    }
+
+    /**
+     * @dataProvider getConfigTypes
+     */
+    public function testMultiRedirectionConfig($type)
+    {
+        $container = $this->loadContainerFromFile('redirect_multi', $type);
+
+        $this->assertSame(array('swiftmailer.default.plugin' => array(array())), $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
+        $this->assertSame(array('first@host.com', 'second@host.com'), $container->getParameter('swiftmailer.mailer.default.delivery_addresses'));
     }
 
     /**
