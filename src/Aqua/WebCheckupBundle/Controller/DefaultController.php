@@ -118,6 +118,13 @@ class DefaultController extends Controller
       );
     }
 
+    return $this->render(
+      'AquaWebCheckupBundle:Default:download.html.twig',
+      array(
+        'website' => $website,
+        )
+      );
+/*
     // Create the HTML report.
     $html = $this->renderView(
       'AquaWebCheckupBundle:Default:download.html.twig',
@@ -144,7 +151,7 @@ class DefaultController extends Controller
           'Content-Disposition'   => 'attachment; filename="' . $filename . '"'
         )
       );
-
+*/
   }
 
 }
