@@ -22,7 +22,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 #icon-status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
 #icon-book { display: none; }
 
-.page-header h1 {
+.page-header {
   text-align: center;
 }
 
